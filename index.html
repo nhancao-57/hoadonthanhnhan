@@ -3,29 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <title>Xuất hoá đơn điện tử</title>
-
   <link rel="manifest" href="manifest.json">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script>
-  const isStandalone =
-    window.matchMedia('(display-mode: standalone)').matches ||
-    window.navigator.standalone === true;
+  <style>
+    /* 1. Default state: Hide everything to prevent flashing */
+    body { font-family: sans-serif; display: none; text-align: center; padding-top: 50px; }
+    
+    /* 2. Instruction Box Styling */
+    .instruction-box {
+      border: 1px solid #ccc; max-width: 600px; margin: 0 auto;
+      padding: 40px; border-radius: 8px; background: #f9f9f9;
+    }
+    .url-bar-icon {
+      font-weight: bold; background: #eee; padding: 5px 10px; border-radius: 4px; border: 1px solid #999;
+    }
+    .btn {
+      display: inline-block; margin-top: 20px; padding: 10px 20px;
+      background: #007bff; color: white; text-decoration: none; border-radius: 5px;
+    }
+  </style>
 
-  if (isStandalone) {
-    // App already installed → redirect immediately
-    window.location.replace("https://app3.meinvoice.vn");
-  } else {
-    // Browser visit → stay long enough to be installable
-    setTimeout(() => {
+  <script>
+    // 1. Check if we are in "App Mode"
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    if (isStandalone) {
+      // --- APP MODE: LAUNCH ---
+      // Redirect immediately to the third-party site
       window.location.replace("https://app3.meinvoice.vn");
-    }, 2500);
-  }
-</script>
-
-
+    } else {
+      // --- BROWSER MODE: SHOW SCREEN ---
+      // We are not in the app, so we must load the page to let them install
+      window.onload = function() {
+        document.body.style.display = 'block'; // Reveal the UI
+        
+        // Register Service Worker (REQUIRED for Desktop Install Icon)
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('./sw.js');
+        }
+      };
+    }
+  </script>
 </head>
 <body>
+
+  <div class="instruction-box">
+    <h1>Cài đặt ứng dụng</h1>
+    <p>Để sử dụng phần mềm, vui lòng cài đặt ứng dụng này vào máy tính.</p>
+    
+    <hr>
+    
+    <p style="font-size: 18px; line-height: 1.6;">
+      Nhấn vào biểu tượng <strong>Cài đặt (+)</strong> hoặc <strong>Máy tính 🖥️</strong><br>
+      nằm ở phía bên phải thanh địa chỉ trình duyệt.
+    </p>
+
+    <a href="https://app3.meinvoice.vn" class="btn">Tiếp tục trên Web (Không cài đặt)</a>
+  </div>
+
 </body>
 </html>
