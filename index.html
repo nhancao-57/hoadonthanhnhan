@@ -9,10 +9,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script>
-  setTimeout(() => {
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+
+  if (isStandalone) {
+    // App already installed → redirect immediately
     window.location.replace("https://app3.meinvoice.vn");
-  }, 3000);
+  } else {
+    // Browser visit → stay long enough to be installable
+    setTimeout(() => {
+      window.location.replace("https://app3.meinvoice.vn");
+    }, 2500);
+  }
 </script>
+
 
 </head>
 <body>
